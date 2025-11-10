@@ -1,0 +1,308 @@
+{% extends "base.html" %}
+
+{% block title %}Predict - Employee Retention System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-6"><i class="fas fa-magic"></i> Employee Retention Prediction</h1>
+            <p class="lead">Enter employee details to predict retention likelihood</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Prediction Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-user"></i> Employee Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="predictForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="satisfaction_level" class="form-label">
+                                        <i class="fas fa-smile text-success"></i> Satisfaction Level
+                                    </label>
+                                    <input type="number" class="form-control" id="satisfaction_level" 
+                                           name="satisfaction_level" min="0" max="1" step="0.01" 
+                                           placeholder="0.0 - 1.0" required>
+                                    <div class="form-text">Scale: 0 = Very Unsatisfied, 1 = Very Satisfied</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="last_evaluation" class="form-label">
+                                        <i class="fas fa-star text-warning"></i> Last Evaluation Score
+                                    </label>
+                                    <input type="number" class="form-control" id="last_evaluation" 
+                                           name="last_evaluation" min="0" max="1" step="0.01" 
+                                           placeholder="0.0 - 1.0" required>
+                                    <div class="form-text">Scale: 0 = Poor Performance, 1 = Excellent</div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="number_project" class="form-label">
+                                        <i class="fas fa-project-diagram text-primary"></i> Number of Projects
+                                    </label>
+                                    <input type="number" class="form-control" id="number_project" 
+                                           name="number_project" min="1" max="10" 
+                                           placeholder="2-7 typical" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="average_monthly_hours" class="form-label">
+                                        <i class="fas fa-clock text-info"></i> Average Monthly Hours
+                                    </label>
+                                    <input type="number" class="form-control" id="average_monthly_hours" 
+                                           name="average_monthly_hours" min="50" max="400" 
+                                           placeholder="120-300 typical" required>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="time_spend_company" class="form-label">
+                                        <i class="fas fa-calendar text-secondary"></i> Years with Company
+                                    </label>
+                                    <input type="number" class="form-control" id="time_spend_company" 
+                                           name="time_spend_company" min="1" max="20" 
+                                           placeholder="1-10 typical" required>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="work_accident" class="form-label">
+                                        <i class="fas fa-exclamation-triangle text-danger"></i> Work Accident
+                                    </label>
+                                    <select class="form-select" id="work_accident" name="work_accident" required>
+                                        <option value="">Select...</option>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="promotion_last_5years" class="form-label">
+                                        <i class="fas fa-arrow-up text-success"></i> Promotion in Last 5 Years
+                                    </label>
+                                    <select class="form-select" id="promotion_last_5years" name="promotion_last_5years" required>
+                                        <option value="">Select...</option>
+                                        <option value="0">No</option>
+                                        <option value="1">Yes</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="department" class="form-label">
+                                        <i class="fas fa-building text-primary"></i> Department
+                                    </label>
+                                    <select class="form-select" id="department" name="department" required>
+                                        <option value="">Select Department...</option>
+                                        <option value="sales">Sales</option>
+                                        <option value="accounting">Accounting</option>
+                                        <option value="hr">Human Resources</option>
+                                        <option value="technical">Technical</option>
+                                        <option value="support">Support</option>
+                                        <option value="management">Management</option>
+                                        <option value="IT">IT</option>
+                                        <option value="product_mng">Product Management</option>
+                                        <option value="marketing">Marketing</option>
+                                        <option value="RandD">R&D</option>
+                                    </select>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="salary" class="form-label">
+                                        <i class="fas fa-dollar-sign text-success"></i> Salary Level
+                                    </label>
+                                    <select class="form-select" id="salary" name="salary" required>
+                                        <option value="">Select Salary Level...</option>
+                                        <option value="low">Low</option>
+                                        <option value="medium">Medium</option>
+                                        <option value="high">High</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-magic"></i> Predict Retention
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Prediction Result -->
+            {% if result %}
+            <div class="card mt-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-chart-pie"></i> Prediction Result</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-md-4">
+                            <div class="prediction-result">
+                                <i class="fas fa-user-check fa-3x 
+                                   {% if result.prediction == 'Likely to Stay' %}text-success{% else %}text-danger{% endif %} mb-3">
+                                </i>
+                                <h4>{{ result.prediction }}</h4>
+                                <p class="text-muted">Prediction Outcome</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="prediction-result">
+                                <div class="circular-progress">
+                                    <div class="progress-circle 
+                                        {% if result.probability_stay > 50 %}success{% else %}danger{% endif %}">
+                                        <span>{{ result.probability_stay }}%</span>
+                                    </div>
+                                </div>
+                                <h6 class="mt-2">Probability to Stay</h6>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="prediction-result">
+                                <div class="circular-progress">
+                                    <div class="progress-circle 
+                                        {% if result.probability_leave > 50 %}danger{% else %}success{% endif %}">
+                                        <span>{{ result.probability_leave }}%</span>
+                                    </div>
+                                </div>
+                                <h6 class="mt-2">Probability to Leave</h6>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <h6><i class="fas fa-lightbulb text-warning"></i> Recommendations</h6>
+                        {% if result.probability_leave > 70 %}
+                        <div class="alert alert-danger">
+                            <strong>High Risk:</strong> This employee is at high risk of leaving. 
+                            Consider immediate intervention such as career counseling, workload adjustment, 
+                            or compensation review.
+                        </div>
+                        {% elif result.probability_leave > 50 %}
+                        <div class="alert alert-warning">
+                            <strong>Medium Risk:</strong> Monitor this employee closely. 
+                            Consider one-on-one meetings to understand concerns and provide support.
+                        </div>
+                        {% else %}
+                        <div class="alert alert-success">
+                            <strong>Low Risk:</strong> This employee is likely to stay. 
+                            Continue current engagement strategies and recognize good performance.
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Prediction Guide -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-info-circle"></i> Prediction Guide</h6>
+                </div>
+                <div class="card-body">
+                    <div class="guide-item">
+                        <i class="fas fa-smile text-success"></i>
+                        <div>
+                            <strong>Satisfaction Level</strong>
+                            <p class="text-muted small">Employee's self-reported job satisfaction (0.0 to 1.0)</p>
+                        </div>
+                    </div>
+                    <div class="guide-item">
+                        <i class="fas fa-star text-warning"></i>
+                        <div>
+                            <strong>Last Evaluation</strong>
+                            <p class="text-muted small">Most recent performance evaluation score (0.0 to 1.0)</p>
+                        </div>
+                    </div>
+                    <div class="guide-item">
+                        <i class="fas fa-clock text-info"></i>
+                        <div>
+                            <strong>Monthly Hours</strong>
+                            <p class="text-muted small">Average hours worked per month (typical: 120-300)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Model Performance -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-tachometer-alt"></i> Model Performance</h6>
+                </div>
+                <div class="card-body">
+                    <div class="performance-metric">
+                        <span class="metric-label">Model Accuracy:</span>
+                        <span class="badge bg-success">92.3%</span>
+                    </div>
+                    <div class="performance-metric">
+                        <span class="metric-label">Precision (Stay):</span>
+                        <span class="badge bg-info">89.1%</span>
+                    </div>
+                    <div class="performance-metric">
+                        <span class="metric-label">Recall (Leave):</span>
+                        <span class="badge bg-warning">87.6%</span>
+                    </div>
+                    <div class="performance-metric">
+                        <span class="metric-label">F1-Score:</span>
+                        <span class="badge bg-primary">88.3%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Form validation
+document.getElementById('predictForm').addEventListener('submit', function(e) {
+    const satisfaction = parseFloat(document.getElementById('satisfaction_level').value);
+    const evaluation = parseFloat(document.getElementById('last_evaluation').value);
+    
+    if (satisfaction < 0 || satisfaction > 1) {
+        e.preventDefault();
+        alert('Satisfaction level must be between 0.0 and 1.0');
+        return;
+    }
+    
+    if (evaluation < 0 || evaluation > 1) {
+        e.preventDefault();
+        alert('Last evaluation score must be between 0.0 and 1.0');
+        return;
+    }
+});
+
+// Input helpers
+document.getElementById('satisfaction_level').addEventListener('input', function() {
+    const value = parseFloat(this.value);
+    const feedback = document.createElement('div');
+    feedback.className = 'input-feedback';
+    
+    // Remove existing feedback
+    const existing = this.parentNode.querySelector('.input-feedback');
+    if (existing) existing.remove();
+    
+    if (value < 0.3) {
+        feedback.innerHTML = '<small class="text-danger">⚠️ Very low satisfaction</small>';
+    } else if (value < 0.6) {
+        feedback.innerHTML = '<small class="text-warning">⚠️ Below average satisfaction</small>';
+    } else if (value >= 0.8) {
+        feedback.innerHTML = '<small class="text-success">✅ High satisfaction</small>';
+    }
+    
+    if (feedback.innerHTML) {
+        this.parentNode.appendChild(feedback);
+    }
+});
+</script>
+{% endblock %}

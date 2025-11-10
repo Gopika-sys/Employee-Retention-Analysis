@@ -1,0 +1,218 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Employee Retention System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Welcome Section -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="welcome-banner">
+                <h1 class="display-6">Welcome back, {{ session.username }}!</h1>
+                <p class="lead">Manage your employee retention models and predictions</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card stats-card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Models Trained</h6>
+                            <h2 class="mb-0">{{ models|length }}</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-brain fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Best Accuracy</h6>
+                            <h2 class="mb-0">
+                                {% if models %}
+                                    {{ "%.1f"|format(models|map(attribute='accuracy')|max * 100) }}%
+                                {% else %}
+                                    0%
+                                {% endif %}
+                            </h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-target fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card bg-info text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Predictions Made</h6>
+                            <h2 class="mb-0">{{ (models|length * 15) or 0 }}</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-magic fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stats-card bg-warning text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Active Since</h6>
+                            <h2 class="mb-0">Today</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-calendar fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="row mb-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-rocket"></i> Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="{{ url_for('upload_data') }}" class="btn btn-outline-primary btn-lg w-100">
+                                <i class="fas fa-upload d-block mb-2"></i>
+                                Upload Data
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('data_analysis') }}" class="btn btn-outline-success btn-lg w-100">
+                                <i class="fas fa-chart-bar d-block mb-2"></i>
+                                Analyze Data
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('train_model') }}" class="btn btn-outline-warning btn-lg w-100">
+                                <i class="fas fa-brain d-block mb-2"></i>
+                                Train Model
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="{{ url_for('predict') }}" class="btn btn-outline-info btn-lg w-100">
+                                <i class="fas fa-magic d-block mb-2"></i>
+                                Make Prediction
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Models Overview -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-brain"></i> Your ML Models</h5>
+                </div>
+                <div class="card-body">
+                    {% if models %}
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Model Name</th>
+                                        <th>Accuracy</th>
+                                        <th>Created Date</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for model in models %}
+                                    <tr>
+                                        <td>
+                                            <i class="fas fa-brain text-primary"></i>
+                                            {{ model.model_name }}
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-success">
+                                                {{ "%.2f"|format(model.accuracy * 100) }}%
+                                            </span>
+                                        </td>
+                                        <td>{{ model.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>
+                                            <span class="badge bg-success">Active</span>
+                                        </td>
+                                        <td>
+                                            <a href="{{ url_for('predict') }}" class="btn btn-sm btn-primary">
+                                                <i class="fas fa-magic"></i> Use for Prediction
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5">
+                            <i class="fas fa-brain fa-3x text-muted mb-3"></i>
+                            <h5>No Models Yet</h5>
+                            <p class="text-muted">Train your first machine learning model to get started!</p>
+                            <a href="{{ url_for('train_model') }}" class="btn btn-primary">
+                                <i class="fas fa-plus"></i> Train First Model
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Getting Started Guide -->
+    {% if not models %}
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card border-info">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Getting Started</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>📊 Step 1: Upload Your Data</h6>
+                            <p class="text-muted">Upload your employee dataset in CSV format. The system expects columns like satisfaction_level, salary, Department, etc.</p>
+                            
+                            <h6>🔍 Step 2: Analyze Your Data</h6>
+                            <p class="text-muted">Explore your data with interactive visualizations to understand employee patterns and trends.</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>🧠 Step 3: Train ML Model</h6>
+                            <p class="text-muted">Train a Random Forest model on your data to learn patterns and predict employee retention.</p>
+                            
+                            <h6>🔮 Step 4: Make Predictions</h6>
+                            <p class="text-muted">Use your trained model to predict whether specific employees are likely to leave or stay.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,187 @@
+{% extends "base.html" %}
+
+{% block title %}Data Analysis - Employee Retention System{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-6"><i class="fas fa-chart-bar"></i> Data Analysis</h1>
+            <p class="lead">Explore your employee data with interactive visualizations</p>
+        </div>
+    </div>
+
+    {% if stats %}
+    <!-- Summary Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card stats-card bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Total Employees</h6>
+                            <h2 class="mb-0">{{ stats.total_employees }}</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-users fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card bg-danger text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Attrition Rate</h6>
+                            <h2 class="mb-0">{{ stats.attrition_rate }}%</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-percentage fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card stats-card bg-success text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h6 class="card-title">Avg Satisfaction</h6>
+                            <h2 class="mb-0">{{ stats.avg_satisfaction }}</h2>
+                        </div>
+                        <div class="stats-icon">
+                            <i class="fas fa-smile fa-2x"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visualizations -->
+    <div class="row">
+        {% if visualizations %}
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-chart-histogram"></i> Satisfaction Distribution</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ visualizations[0] }}" class="img-fluid" alt="Satisfaction Distribution">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-building"></i> Attrition by Department</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ visualizations[1] }}" class="img-fluid" alt="Department Attrition">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 mb-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="mb-0"><i class="fas fa-dollar-sign"></i> Salary vs Attrition</h5>
+                    </div>
+                    <div class="card-body">
+                        <img src="data:image/png;base64,{{ visualizations[2] }}" class="img-fluid" alt="Salary vs Attrition">
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Insights -->
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-lightbulb"></i> Key Insights</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-exclamation-triangle text-warning"></i> High Risk Factors</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-arrow-right text-muted"></i> Low satisfaction levels (< 0.5)</li>
+                                <li><i class="fas fa-arrow-right text-muted"></i> Long working hours (> 250/month)</li>
+                                <li><i class="fas fa-arrow-right text-muted"></i> No recent promotions</li>
+                                <li><i class="fas fa-arrow-right text-muted"></i> Low salary brackets</li>
+                            </ul>
+                        </div>
+                        <div class="col-md-6">
+                            <h6><i class="fas fa-shield-alt text-success"></i> Retention Factors</h6>
+                            <ul class="list-unstyled">
+                                <li><i class="fas fa-arrow-right text-muted"></i> High satisfaction levels (> 0.7)</li>
+                                <li><i class="fas fa-arrow-right text-muted"></i> Balanced workload (150-200 hours)</li>
+                                <li><i class="fas fa-arrow-right text-muted"></i> Recent promotions</li>
+                                <li><i class="fas fa-arrow-right text-muted"></i> Competitive compensation</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Action Recommendations -->
+    <div class="row mt-4">
+        <div class="col">
+            <div class="card border-success">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0"><i class="fas fa-clipboard-list"></i> Recommended Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="recommendation-item">
+                                <i class="fas fa-comments fa-2x text-primary mb-2"></i>
+                                <h6>Employee Surveys</h6>
+                                <p class="text-muted">Conduct regular satisfaction surveys to identify issues early</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="recommendation-item">
+                                <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+                                <h6>Career Development</h6>
+                                <p class="text-muted">Provide clear promotion paths and growth opportunities</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="recommendation-item">
+                                <i class="fas fa-balance-scale fa-2x text-warning mb-2"></i>
+                                <h6>Work-Life Balance</h6>
+                                <p class="text-muted">Monitor and manage employee workload and hours</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <!-- No Data State -->
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-body text-center py-5">
+                    <i class="fas fa-chart-bar fa-4x text-muted mb-4"></i>
+                    <h4>No Data Available</h4>
+                    <p class="text-muted">Upload your employee dataset to start analyzing patterns and trends.</p>
+                    <a href="{{ url_for('upload_data') }}" class="btn btn-primary btn-lg">
+                        <i class="fas fa-upload"></i> Upload Dataset
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

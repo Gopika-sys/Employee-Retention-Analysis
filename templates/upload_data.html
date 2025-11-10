@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Data - Employee Retention System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-6"><i class="fas fa-upload"></i> Upload Employee Data</h1>
+            <p class="lead">Upload your HR dataset to train machine learning models</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Upload Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-file-csv"></i> CSV File Upload</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" id="uploadForm">
+                        <div class="mb-4">
+                            <div class="upload-area" id="uploadArea">
+                                <div class="upload-content">
+                                    <i class="fas fa-cloud-upload-alt fa-4x text-primary mb-3"></i>
+                                    <h5>Drag & Drop CSV File Here</h5>
+                                    <p class="text-muted">or click to browse files</p>
+                                    <input type="file" class="form-control" id="file" name="file" 
+                                           accept=".csv" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>File Requirements:</strong>
+                                <ul class="mb-0 mt-2">
+                                    <li>File format: CSV (.csv)</li>
+                                    <li>Maximum file size: 50MB</li>
+                                    <li>Must contain required columns (see Data Format below)</li>
+                                    <li>Minimum 100 employee records recommended</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="uploadBtn">
+                                <i class="fas fa-upload"></i> Upload Dataset
+                            </button>
+                        </div>
+                        
+                        <!-- Hidden progress indicator -->
+                        <div id="uploadProgress" class="mt-3" style="display: none;">
+                            <div class="progress">
+                                <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" 
+                                     role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted mt-2 d-block">Uploading and validating file...</small>
+                        </div>
+                    </form>
+
+                    <!-- Upload Progress -->
+                    <div id="uploadProgress" class="mt-4 d-none">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6><i class="fas fa-spinner fa-spin"></i> Uploading file...</h6>
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" id="progressBar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Data Download -->
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-download"></i> Sample Dataset</h5>
+                </div>
+                <div class="card-body">
+                    <p>Don't have employee data yet? Download our sample dataset to test the system:</p>
+                    <a href="https://www.kaggle.com/datasets/liujiaqi/hr-comma-sepcsv" 
+                       class="btn btn-outline-primary" target="_blank">
+                        <i class="fas fa-download"></i> Download Sample HR Dataset
+                    </a>
+                    <small class="text-muted d-block mt-2">
+                        Source: Kaggle HR Analytics Dataset (HR_comma_sep.csv)
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Data Format Requirements -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-table"></i> Required Data Format</h6>
+                </div>
+                <div class="card-body">
+                    <p class="text-muted small">Your CSV file should contain these columns:</p>
+                    
+                    <div class="column-list">
+                        <div class="column-item required">
+                            <strong>satisfaction_level</strong>
+                            <small class="text-muted d-block">Float (0.0 - 1.0)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>last_evaluation</strong>
+                            <small class="text-muted d-block">Float (0.0 - 1.0)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>number_project</strong>
+                            <small class="text-muted d-block">Integer (1-10)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>average_montly_hours</strong>
+                            <small class="text-muted d-block">Integer (hours/month)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>time_spend_company</strong>
+                            <small class="text-muted d-block">Integer (years)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>Work_accident</strong>
+                            <small class="text-muted d-block">Binary (0 or 1)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>left</strong>
+                            <small class="text-muted d-block">Binary (0=stayed, 1=left)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>promotion_last_5years</strong>
+                            <small class="text-muted d-block">Binary (0 or 1)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>Department</strong>
+                            <small class="text-muted d-block">String (dept name)</small>
+                        </div>
+                        <div class="column-item required">
+                            <strong>salary</strong>
+                            <small class="text-muted d-block">String (low/medium/high)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Privacy -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-shield-alt"></i> Data Privacy & Security</h6>
+                </div>
+                <div class="card-body">
+                    <div class="privacy-item">
+                        <i class="fas fa-lock text-success"></i>
+                        <div>
+                            <strong>Secure Upload</strong>
+                            <p class="text-muted small">All files are encrypted during transfer</p>
+                        </div>
+                    </div>
+                    <div class="privacy-item">
+                        <i class="fas fa-user-shield text-info"></i>
+                        <div>
+                            <strong>Anonymized Data</strong>
+                            <p class="text-muted small">No personal employee identifiers required</p>
+                        </div>
+                    </div>
+                    <div class="privacy-item">
+                        <i class="fas fa-trash text-warning"></i>
+                        <div>
+                            <strong>Data Cleanup</strong>
+                            <p class="text-muted small">Files can be deleted after model training</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Drag and drop functionality
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('file');
+
+// Prevent default drag behaviors
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, preventDefaults, false);
+    document.body.addEventListener(eventName, preventDefaults, false);
+});
+
+// Highlight drop area when item is dragged over it
+['dragenter', 'dragover'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, highlight, false);
+});
+
+['dragleave', 'drop'].forEach(eventName => {
+    uploadArea.addEventListener(eventName, unhighlight, false);
+});
+
+// Handle dropped files
+uploadArea.addEventListener('drop', handleDrop, false);
+
+// Handle click to browse
+uploadArea.addEventListener('click', () => fileInput.click());
+
+function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+function highlight(e) {
+    uploadArea.classList.add('highlight');
+}
+
+function unhighlight(e) {
+    uploadArea.classList.remove('highlight');
+}
+
+function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    fileInput.files = files;
+    handleFileSelect();
+}
+
+// Handle file selection
+fileInput.addEventListener('change', handleFileSelect);
+
+function handleFileSelect() {
+    const file = fileInput.files[0];
+    if (file) {
+        if (file.type !== 'text/csv' && !file.name.endsWith('.csv')) {
+            alert('Please select a CSV file');
+            return;
+        }
+        
+        if (file.size > 50 * 1024 * 1024) { // 50MB
+            alert('File size too large. Maximum size is 50MB');
+            return;
+        }
+        
+        // Update upload area to show selected file
+        const uploadContent = uploadArea.querySelector('.upload-content');
+        uploadContent.innerHTML = `
+            <i class="fas fa-file-csv fa-4x text-success mb-3"></i>
+            <h5>${file.name}</h5>
+            <p class="text-muted">Size: ${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+            <small class="text-success">✅ File ready for upload</small>
+        `;
+    }
+}
+
+// Handle form submission
+document.getElementById('uploadForm').addEventListener('submit', function(e) {
+    const file = fileInput.files[0];
+    if (!file) {
+        e.preventDefault();
+        alert('Please select a CSV file to upload');
+        return;
+    }
+    
+    // Show upload progress
+    document.getElementById('uploadProgress').classList.remove('d-none');
+    document.getElementById('uploadBtn').disabled = true;
+    document.getElementById('uploadBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+    
+    // Simulate upload progress
+    let progress = 0;
+    const progressBar = document.getElementById('progressBar');
+    
+    const updateProgress = () => {
+        progress += Math.random() * 15;
+        if (progress > 100) progress = 100;
+        
+        progressBar.style.width = progress + '%';
+        
+        if (progress < 100) {
+            setTimeout(updateProgress, 200);
+        }
+    };
+    
+    updateProgress();
+});
+</script>
+<script src="{{ url_for('static', filename='js/upload.js') }}"></script>
+{% endblock %}

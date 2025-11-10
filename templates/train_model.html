@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}Train Model - Employee Retention System{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="display-6"><i class="fas fa-brain"></i> Train ML Model</h1>
+            <p class="lead">Train a machine learning model on your employee data</p>
+        </div>
+    </div>
+
+    <!-- Training Process -->
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-cogs"></i> Model Training</h5>
+                </div>
+                <div class="card-body">
+                    <form method="POST" id="trainForm">
+                        <div class="mb-4">
+                            <h6><i class="fas fa-info-circle text-info"></i> Training Configuration</h6>
+                            <p class="text-muted">
+                                The system will train a Random Forest Classifier on your uploaded employee data.
+                                The model will learn patterns from features like satisfaction level, salary, department,
+                                working hours, and promotion history to predict employee retention.
+                            </p>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Model Algorithm</strong></label>
+                            <div class="form-control-plaintext">
+                                <i class="fas fa-tree text-success"></i> Random Forest Classifier
+                                <small class="text-muted d-block">
+                                    Ensemble method with high accuracy for employee retention prediction
+                                </small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label"><strong>Features Used for Training</strong></label>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled feature-list">
+                                        <li><i class="fas fa-check text-success"></i> Satisfaction Level</li>
+                                        <li><i class="fas fa-check text-success"></i> Last Evaluation Score</li>
+                                        <li><i class="fas fa-check text-success"></i> Number of Projects</li>
+                                        <li><i class="fas fa-check text-success"></i> Average Monthly Hours</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <ul class="list-unstyled feature-list">
+                                        <li><i class="fas fa-check text-success"></i> Time with Company</li>
+                                        <li><i class="fas fa-check text-success"></i> Work Accidents</li>
+                                        <li><i class="fas fa-check text-success"></i> Recent Promotions</li>
+                                        <li><i class="fas fa-check text-success"></i> Department & Salary</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-lightbulb"></i>
+                            <strong>Training Process:</strong>
+                            <ol class="mb-0 mt-2">
+                                <li>Data preprocessing and feature encoding</li>
+                                <li>Train/test split (80/20 ratio)</li>
+                                <li>Feature scaling and normalization</li>
+                                <li>Random Forest model training (100 trees)</li>
+                                <li>Model evaluation and accuracy calculation</li>
+                            </ol>
+                        </div>
+
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg" id="trainBtn">
+                                <i class="fas fa-play"></i> Start Training
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Training Progress (Hidden by default) -->
+                    <div id="trainingProgress" class="mt-4" style="display: none;">
+                        <div class="card bg-light">
+                            <div class="card-body">
+                                <h6><i class="fas fa-spinner fa-spin"></i> Training in Progress...</h6>
+                                <div class="progress mb-3">
+                                    <div class="progress-bar progress-bar-striped progress-bar-animated" 
+                                         role="progressbar" style="width: 0%" id="progressBar"></div>
+                                </div>
+                                <div id="trainingStatus">Initializing training process...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Training Tips -->
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-tips"></i> Training Tips</h6>
+                </div>
+                <div class="card-body">
+                    <div class="tip-item">
+                        <i class="fas fa-database text-primary"></i>
+                        <div>
+                            <strong>Data Quality</strong>
+                            <p class="text-muted small">Ensure your dataset has sufficient historical records for better accuracy.</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-balance-scale text-success"></i>
+                        <div>
+                            <strong>Balanced Dataset</strong>
+                            <p class="text-muted small">A mix of employees who stayed and left provides better training.</p>
+                        </div>
+                    </div>
+                    <div class="tip-item">
+                        <i class="fas fa-clock text-warning"></i>
+                        <div>
+                            <strong>Training Time</strong>
+                            <p class="text-muted small">Model training typically takes 1-3 minutes depending on data size.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expected Performance -->
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0"><i class="fas fa-target"></i> Expected Performance</h6>
+                </div>
+                <div class="card-body">
+                    <div class="metric-item">
+                        <span class="metric-label">Typical Accuracy:</span>
+                        <span class="badge bg-success">85-95%</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Training Data Split:</span>
+                        <span class="badge bg-info">80% Train / 20% Test</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Model Type:</span>
+                        <span class="badge bg-primary">Random Forest</span>
+                    </div>
+                    <div class="metric-item">
+                        <span class="metric-label">Cross Validation:</span>
+                        <span class="badge bg-warning">Stratified Split</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('trainForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Show training progress
+    document.getElementById('trainingProgress').style.display = 'block';
+    document.getElementById('trainBtn').disabled = true;
+    document.getElementById('trainBtn').innerHTML = '<i class="fas fa-spinner fa-spin"></i> Training...';
+    
+    // Simulate training progress
+    let progress = 0;
+    const progressBar = document.getElementById('progressBar');
+    const statusElement = document.getElementById('trainingStatus');
+    
+    const stages = [
+        { progress: 20, status: 'Loading and preprocessing data...' },
+        { progress: 40, status: 'Splitting data into train/test sets...' },
+        { progress: 60, status: 'Training Random Forest model...' },
+        { progress: 80, status: 'Evaluating model performance...' },
+        { progress: 100, status: 'Saving trained model...' }
+    ];
+    
+    let currentStage = 0;
+    
+    const updateProgress = () => {
+        if (currentStage < stages.length) {
+            const stage = stages[currentStage];
+            progressBar.style.width = stage.progress + '%';
+            statusElement.textContent = stage.status;
+            currentStage++;
+            
+            setTimeout(updateProgress, 1500);
+        } else {
+            // Submit the form
+            this.submit();
+        }
+    };
+    
+    updateProgress();
+});
+</script>
+{% endblock %}
