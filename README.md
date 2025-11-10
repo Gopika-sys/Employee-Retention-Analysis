@@ -367,15 +367,6 @@ Employee-Retention-Analaysis/
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-**Dharaneesh**
-- GitHub: [@Dharaneesh20](https://github.com/Dharaneesh20)
-- Repository: [Employee-Retention-Analaysis](https://github.com/Dharaneesh20/Employee-Retention-Analaysis)
 
 ## 🙏 Acknowledgments
 
@@ -387,7 +378,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 📞 Support
 
 If you have any questions or need support, please:
-1. Check the [Issues](https://github.com/Dharaneesh20/Employee-Retention-Analaysis/issues) page
+
 2. Create a new issue with detailed description
 3. Contact the repository owner
 
@@ -395,7 +386,7 @@ If you have any questions or need support, please:
 
 <div align="center">
   <p>⭐ If you found this project helpful, please give it a star! ⭐</p>
-  <p>Built with ❤️ by Dharaneesh</p>
+  <p>Built with ❤️ by Gopika</p>
 </div>
 
 ---
