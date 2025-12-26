@@ -65,7 +65,7 @@ A comprehensive Machine Learning web application that predicts employee retentio
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/Dharaneesh20/Employee-Retention-Analaysis.git
+   git clone https://github.com/Gopika-sys/Employee-Retention-Analaysis.git
    cd Employee-Retention-Analaysis
    ```
 
