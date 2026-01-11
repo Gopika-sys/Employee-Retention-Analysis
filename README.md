@@ -386,7 +386,7 @@ If you have any questions or need support, please:
 
 <div align="center">
   <p>⭐ If you found this project helpful, please give it a star! ⭐</p>
-  <p>Built with ❤️ by Gopik</p>
+  <p>Built with ❤️ by Gopika</p>
 </div>
 
 ---
